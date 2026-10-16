@@ -3,7 +3,7 @@ using UnityEngine;
 public class Thorns : MonoBehaviour
 {
 
-    [SerializeField] private float _damage = 10f;
+    [SerializeField, Min(1)] private float _damage = 10f;
 
     private void OnTriggerEnter2D(Collider2D other)
     {

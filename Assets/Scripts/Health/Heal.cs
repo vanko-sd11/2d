@@ -3,7 +3,7 @@ using UnityEngine;
 public class Heal : MonoBehaviour
 {
 
-    [SerializeField] private float _healCount = 10f;
+    [SerializeField, Min(1)] private float _healCount = 10f;
 
     private void OnTriggerEnter2D(Collider2D other)
     {

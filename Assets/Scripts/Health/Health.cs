@@ -4,15 +4,26 @@ using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] private float _maxHealth = 100f;
-    [SerializeField]private float _currentHealth = 100f;
+    [SerializeField, Min(1)] private float _maxHealth = 100f;
+    [SerializeField] private float _currentHealth = 100f;
     [SerializeField] private Image _healthBar;
-    [SerializeField] private GameObject _overPanel;
+    [SerializeField] private GameObject _deathPanel; 
+
+    public float MaxHealth
+    {
+        get => _maxHealth;
+        set => _maxHealth = Mathf.Max(0, value);
+    }
 
 
     void Start()
     {
-        _overPanel.SetActive(false);
+        if (_maxHealth <= 0)
+        {
+            _maxHealth = 1;
+        }
+
+        _deathPanel.SetActive(false);
         Bar();
     }
 
@@ -25,10 +36,12 @@ public class Health : MonoBehaviour
     public void Heal(float amount)
     {
         _currentHealth = _currentHealth + amount;
-        if( _currentHealth > _maxHealth)
+        if (_currentHealth > _maxHealth)
         {
             _currentHealth = _maxHealth;
         }
+
+        
         Bar();
     }
     public void TakeDamage(float damage)
@@ -49,7 +62,7 @@ public class Health : MonoBehaviour
     }
     void Die()
     {
-        _overPanel.SetActive(true);
+        _deathPanel.SetActive(true);
         Time.timeScale = 0f;
     }
 }
