@@ -10,6 +10,11 @@ public class WalletCoins : MonoBehaviour
 
     public void Add(int amount)
     {
+        if (amount <= 0)
+        {
+            return;
+        }
+
         _coins += amount;
         ChangCoins?.Invoke(_coins);
     }

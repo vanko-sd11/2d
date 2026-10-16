@@ -1,0 +1,17 @@
+using UnityEngine;
+
+public class Thorns : MonoBehaviour
+{
+
+    [SerializeField] private float _damage = 10f;
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(!other.TryGetComponent(out Health health))
+        {
+            return;
+        }
+
+        health.TakeDamage(_damage);
+    }
+}

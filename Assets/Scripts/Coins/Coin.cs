@@ -7,11 +7,11 @@ public class Coin : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player") || 
-            !other.TryGetComponent(out WalletCoins wallet))
+        if (!other.TryGetComponent(out WalletCoins wallet))
         {
             return;
         }
+            
 
         wallet.Add(_coin);
         Destroy(gameObject);
