@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -6,63 +7,34 @@ public class Health : MonoBehaviour
 {
     [SerializeField, Min(1)] private float _maxHealth = 100f;
     [SerializeField] private float _currentHealth = 100f;
-    [SerializeField] private Image _healthBar;
-    [SerializeField] private GameObject _deathPanel; 
 
-    public float MaxHealth
+    public event Action<float, float> OnChanged;
+    public event Action Died;
+
+    private void Start()
     {
-        get => _maxHealth;
-        set => _maxHealth = Mathf.Max(0, value);
-    }
-
-
-    void Start()
-    {
-        if (_maxHealth <= 0)
-        {
-            _maxHealth = 1;
-        }
-
-        _deathPanel.SetActive(false);
-        Bar();
-    }
-
-
-    void Bar()
-    {
-        _healthBar.fillAmount  = _currentHealth / _maxHealth ;
+        OnChanged?.Invoke(_currentHealth, _maxHealth);
     }
 
     public void Heal(float amount)
     {
-        _currentHealth = _currentHealth + amount;
-        if (_currentHealth > _maxHealth)
-        {
-            _currentHealth = _maxHealth;
-        }
-
-        
-        Bar();
+        _currentHealth = Mathf.Min(_currentHealth + amount, _maxHealth);
+        OnChanged?.Invoke(_currentHealth, _maxHealth);
     }
+
     public void TakeDamage(float damage)
     {
-        _currentHealth = _currentHealth - damage;
-        if(_currentHealth < 0)
+        if (_currentHealth <= 0)
         {
-            _currentHealth = 0;
-        }
-        Bar();
-
-        if(_currentHealth <= 0)
-        {
-            Die();
+            return;
         }
 
+        _currentHealth = Mathf.Max(_currentHealth - damage, 0);
+        OnChanged?.Invoke(_currentHealth, _maxHealth);
 
-    }
-    void Die()
-    {
-        _deathPanel.SetActive(true);
-        Time.timeScale = 0f;
+        if (_currentHealth == 0)
+        {
+            Died?.Invoke();
+        }
     }
 }
